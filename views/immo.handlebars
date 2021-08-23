@@ -1,0 +1,41 @@
+<h2>Immobilienliste</h2>
+
+{{#if immoData}}
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Straße</th>
+        <th>Hausnummer</th>
+        <th>Stadt</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody id="estateTable">
+{{#each immoData}}
+      <tr>
+        <td>{{id}}</td>
+        <td>{{strasse}}</td>
+        <td>{{hausnr}}</td>
+        <td>{{stadt}}</td>
+        <td>
+          <button class=lightButton type="button" data-immo-id={{id}} data-action-type="show">Details</button>
+          <button class=lightButton type="button" data-immo-id={{id}} data-action-type="delete">Löschen</button>
+        </td>
+      </tr>
+  {{/each}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+  <p>Keine Daten in der Datenbank</p>
+{{/if}}
+
+<div>
+  <form action="/immobilien/add" method="get">
+      <input type="submit" value="Immobilie hinzufügen">
+  </form>
+</div>
+
+<script src="/scripts/immobilien.js" type="text/javascript"></script>

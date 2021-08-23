@@ -1,0 +1,17 @@
+/* Addon to Simple.css */
+.lightButton {
+  border: none;
+  border-radius: 5px;
+  background: var(--accent-light);
+  font-size: 1rem;
+  color: var(--text);
+  padding: .7rem .9rem;
+  margin: .5rem 0;
+  transition: .4s;
+}
+
+.wide {
+	width: 80vw;
+  position: relative;
+  left: calc(-40vw + 50%);
+}
