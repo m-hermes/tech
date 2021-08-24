@@ -6,11 +6,11 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 // Database
-const dbClient = require('./config/database');
+//const dbClient = require('./config/database');
 //Test DB
-dbClient.connect()
-.then(() => console.log('Database connected ...'))
-.catch((error) => console.log(error));
+//dbClient.connect()
+//.then(() => console.log('Database connected ...'))
+//.catch((error) => console.log(error));
 
 const app = express();
 
@@ -26,9 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.get('/', (req, res) => { res.render('index'); });
-app.use('/adressen', require('./routes/adressen'));
-app.use('/immobilien', require('./routes/immobilien'));
-app.use('/personen', require('./routes/personen'));
+//app.use('/adressen', require('./routes/adressen'));
+//app.use('/immobilien', require('./routes/immobilien'));
+//app.use('/personen', require('./routes/personen'));
 
 const PORT = process.env.PORT || 5000;
 
