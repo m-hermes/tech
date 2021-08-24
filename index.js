@@ -25,10 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.get('/', (req, res) => { res.render('index'); });
-//app.use('/adressen', require('./routes/adressen'));
-//app.use('/immobilien', require('./routes/immobilien'));
-//app.use('/personen', require('./routes/personen'));
+app.use('/', require('./routes/index'));
+app.use('/api', require('./routes/api')); // For data calls
 
 const PORT = process.env.PORT || 5000;
 

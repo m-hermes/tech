@@ -1,9 +1,5 @@
 'use strict';
 
-function getCurrentTime() {
-
-}
-
 let localCounter = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,5 +29,23 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     false
   );
+
+	let globalCounterButton = document.getElementById('globalCounterButton');
+	let globalCounterResult = document.getElementById('globalCounterResult');
+
+	// Update global counter to current value upon page loading:
+	fetch('/api/counter')
+		.then(res => res.json())
+		.then(data => globalCounterResult.value = data);
+
+	globalCounterButton.addEventListener(
+		'click',
+		() => {
+			fetch('/api/counter/increment')
+				.then(res => res.json())
+				.then(data => globalCounterResult.value = data)
+		},
+		false
+	);
 
 });
