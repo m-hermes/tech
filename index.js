@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const functs = require('./logic/logicFunctions');
 
 // Routes
-app.use('/', (req, res) => {
+app.get('/', (req, res) => {
 	res.render('index', {globalCounter : functs.getCounter()});
 });
 

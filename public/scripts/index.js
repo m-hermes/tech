@@ -103,6 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
     false
   );
 
+	// @isOpen
+  // check if a websocket is open
+  const isOpen = function(ws) {
+    return ws.readyState === ws.OPEN
+  }
+
   // Sending request for increase in global counter
   document.getElementById('globalCounterButton')
     .addEventListener(
