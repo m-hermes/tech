@@ -16,16 +16,7 @@ app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 
-// Body Parser helps with parsing
-// the content from reqests into JSON
-// format
-const bodyParser = require('body-parser');
-app.use(express.urlencoded({
-  extended: false
-}));
-
-// Functions for working with folder
-// structures
+// Functions for working with folder structures
 const path = require('path');
 
 // Inclusion of postgresql database
@@ -37,22 +28,53 @@ dbClient.connect()
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-app.use('/', require('./routes/index'));
-app.use('/api', require('./routes/api')); // For data calls
+// Inclusion of functions needed for the app
+const functs = require('./logic/logicFunctions');
 
-// Simple websockets route
+// Routes
+app.use('/', (req, res) => {
+	res.render('index', {globalCounter : functs.getCounter()});
+});
+
+// Sebsocket route
 app.ws('/ws', async function(ws, req) {
+
   ws.on('message', async function(msg) {
-    console.log('Websocket received message');
-    console.log(JSON.parse(msg));
-		console.log(req.socket.remoteAddress);
-    // Send back some data
-    ws.send(JSON.stringify({
-      "append": true,
-      "returnText": "I am using websockets!"
-    }));
+
+			// Dealing with globalCounter
+      if (msg === 'increaseGlobalCounter') {
+        await functs.increaseCounter()
+					// Sending new value to all clients
+          .then(currentValue => {
+            expressWs.getWss().clients.forEach(
+              (client) => {
+                client.send(JSON.stringify({
+                  'globalCounter': currentValue
+                }));
+              })
+          });
+      }
+
+			// Dealing with new client
+			// and its IP adress
+      if (msg === 'hello') {
+        // IP adress
+        let ipAdress = functs.anonymizeIp(req.socket.remoteAddress);
+				// Update database and getting new list
+        functs.updateAdressTable(ipAdress)
+					// Sending new list to all clients
+          .then(result =>
+            expressWs.getWss().clients.forEach(
+              (client) => {
+                client.send(JSON.stringify({
+                  ipAdresses: result.rows
+                }));
+              })
+          )
+      }
+
   });
+
 });
 
 const PORT = process.env.PORT || 5000;

@@ -4,22 +4,24 @@ let localCounter = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  let timeButton = document.getElementById('timeButton');
+  // Time button and display
   let timeResult = document.getElementById('timeResult');
 
-  timeButton.addEventListener(
-    'click',
-    () => {
-      let date = new Date(); // for now
-      timeResult.value = date.toLocaleTimeString();
-    },
-    false
-  );
+  document.getElementById('timeButton')
+    .addEventListener(
+      'click',
+      () => {
+        let date = new Date(); // for now
+        timeResult.value = date.toLocaleTimeString();
+      },
+      false
+    );
 
-  let localCounterButton = document.getElementById('localCounterButton');
+
+  // Local counter and display
   let localCounterResult = document.getElementById('localCounterResult');
 
-  localCounterButton.addEventListener(
+  document.getElementById('localCounterButton').addEventListener(
     'click',
     () => {
       localCounterResult.value = ++localCounter;
@@ -27,91 +29,86 @@ document.addEventListener('DOMContentLoaded', () => {
     false
   );
 
-  let globalCounterButton = document.getElementById('globalCounterButton');
+
+  // Setup of websocket
+  // required for global counter and ip adress list
+  // basis found on https://fjolt.com/article/javascript-websockets
+  const socketProtocol =
+		(window.location.protocol === 'https:' ? 'wss:' : 'ws:');
+
+  const port = 5000;
+
+  const socketUrl =
+		`${socketProtocol}//${window.location.hostname}:${port}/ws/`;
+
+  let socket = new WebSocket(socketUrl);
+
+
+  // Global counter and adressTable elements:
   let globalCounterResult = document.getElementById('globalCounterResult');
+  let adressTable = document.getElementById('adressTable');
 
-  // Update global counter to current value upon page loading:
-  fetch('/api/counter')
-    .then(res => res.json())
-    .then(data => globalCounterResult.value = data);
 
-  globalCounterButton.addEventListener(
-    'click',
-    () => {
-      fetch('/api/counter/increment')
-        .then(res => res.json())
-        .then(data => globalCounterResult.value = data)
+  // Sending "Hello" to the server to include
+  // client's ip adress.
+  socket.addEventListener(
+    'open',
+    () => socket.send('hello'),
+    false
+  );
+
+
+  // Setting up the logic to deal with messages from the
+  // server for global counter and ip adress change
+  socket.addEventListener(
+    'message',
+    (msg) => {
+
+      try {
+        let msgData = JSON.parse(msg.data);
+
+				// Dealing with the global counter
+        if (msgData.hasOwnProperty('globalCounter')) {
+          globalCounterResult.value = msgData.globalCounter;
+        }
+
+				// Dealing with the adresses
+        if (msgData.hasOwnProperty('ipAdresses')) {
+					// Clearing table at start:
+					adressTable.innerHTML = '';
+
+					// building table with current data
+          msgData.ipAdresses.forEach((ipAdress) => {
+            let row = adressTable.insertRow();
+            let td = document.createElement('td');
+            let content = document.createTextNode(ipAdress);
+            td.appendChild(content);
+            row.appendChild(td);
+          })
+        }
+
+      } catch (err) {
+        console.log(err);
+      }
+
+    },
+    false
+  )
+
+  socket.addEventListener(
+    'error',
+    (error) => {
+      console.log(error);
     },
     false
   );
 
-  // @connect
-  // Connect to the websocket
-  // found on https://fjolt.com/article/javascript-websockets
-
-  let socket;
-
-	const connect = function() {
-    return new Promise((resolve, reject) => {
-      const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
-      const port = 5000;
-      const socketUrl = `${socketProtocol}//${window.location.hostname}:${port}/ws/`
-
-      // Define socket
-      socket = new WebSocket(socketUrl);
-
-      socket.onopen = (e) => {
-        // Send a little test data, which we can use on the server if we want
-        socket.send(JSON.stringify({
-          "loaded": true
-        }));
-        // Resolve the promise - we are connected
-        resolve();
-      }
-
-      socket.onmessage = (msg) => {
-        console.log('Websocket message received');
-        console.log(JSON.parse(msg.data));
-        // Any data from the server can be manipulated here.
-        /*
-        let parsedData = JSON.parse(data.data);
-        if (parsedData.append === true) {
-          const newEl = document.createElement('p');
-          newEl.textContent = parsedData.returnText;
-          document.getElementById('websocket-returns').appendChild(newEl);
-        }
-				*/
-      }
-
-      socket.onerror = (e) => {
-        // Return an error if any occurs
-        console.log(e);
-        resolve();
-        // Try to connect again
-        connect();
-      }
-    });
-  }
-
-  // @isOpen
-  // check if a websocket is open
-  const isOpen = function(ws) {
-    return ws.readyState === ws.OPEN
-  }
-
-  connect();
-
-  // And add our event listeners
-  document.getElementById('websocket-button')
+  // Sending request for increase in global counter
+  document.getElementById('globalCounterButton')
     .addEventListener(
       'click',
-      function(e) {
-        if (isOpen(socket)) {
-          socket.send(JSON.stringify({
-            "data": "this is our data to send",
-            "other": "this can be in any format"
-          }))
-        }
-      });
+      () => socket.send('increaseGlobalCounter'),
+      false
+    );
 
 });
