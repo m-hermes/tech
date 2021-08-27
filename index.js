@@ -4,6 +4,22 @@
 const express = require('express');
 const app = express();
 
+// Inclusion of helmet for protection
+// https://www.npmjs.com/package/helmet
+const helmet = require('helmet');
+app.use(helmet());
+
+// Sets "Content-Security-Policy: script-src 'self'"
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: false,
+    directives: {
+      "default-src": helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc,
+      "script-src": ["'self'"],
+    },
+  })
+);
+
 // Inclusion of expresWS, which brings in
 // use of websockets
 const expressWs = require('express-ws')(app);

@@ -34,12 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // required for global counter and ip adress list
   // basis found on https://fjolt.com/article/javascript-websockets
   const socketProtocol =
-		(window.location.protocol === 'https:' ? 'wss:' : 'ws:');
+    (window.location.protocol === 'https:' ? 'wss:' : 'ws:');
 
   const port = 5000;
 
   const socketUrl =
-		`${socketProtocol}//${window.location.hostname}:${port}/ws/`;
+    `${socketProtocol}//${window.location.hostname}:${port}/ws/`;
 
   let socket = new WebSocket(socketUrl);
 
@@ -64,46 +64,32 @@ document.addEventListener('DOMContentLoaded', () => {
     'message',
     (msg) => {
 
-      try {
-        let msgData = JSON.parse(msg.data);
+      let msgData = JSON.parse(msg.data);
 
-				// Dealing with the global counter
-        if (msgData.hasOwnProperty('globalCounter')) {
-          globalCounterResult.value = msgData.globalCounter;
-        }
-
-				// Dealing with the adresses
-        if (msgData.hasOwnProperty('ipAdresses')) {
-					// Clearing table at start:
-					adressTable.innerHTML = '';
-
-					// building table with current data
-          msgData.ipAdresses.forEach((ipAdress) => {
-            let row = adressTable.insertRow();
-            let td = document.createElement('td');
-            let content = document.createTextNode(ipAdress);
-            td.appendChild(content);
-            row.appendChild(td);
-          })
-        }
-
-      } catch (err) {
-        console.log(err);
+      // Dealing with the global counter
+      if (msgData.hasOwnProperty('globalCounter')) {
+        globalCounterResult.value = msgData.globalCounter;
       }
 
+      // Dealing with the adresses
+      if (msgData.hasOwnProperty('ipAdresses')) {
+        // Clearing table at start:
+        adressTable.innerHTML = '';
+
+        // building table with current data
+        msgData.ipAdresses.forEach((ipAdress) => {
+          let row = adressTable.insertRow();
+          let td = document.createElement('td');
+          let content = document.createTextNode(ipAdress);
+          td.appendChild(content);
+          row.appendChild(td);
+        });
+      }
     },
     false
   )
 
-  socket.addEventListener(
-    'error',
-    (error) => {
-      console.log(error);
-    },
-    false
-  );
-
-	// @isOpen
+  // @isOpen
   // check if a websocket is open
   const isOpen = function(ws) {
     return ws.readyState === ws.OPEN
