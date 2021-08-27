@@ -1,11 +1,10 @@
 const { Client } = require('pg')
 
-const dbClient = new Client({
-  user: 'http_user',
-  host: 'localhost',
-  database: 'connections',
-  password: 'secret',
-  port: 5432,
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 module.exports = dbClient;
