@@ -39,7 +39,6 @@ async function updateAdressTable(newAdress) {
   }
 	catch (e) {
     await dbClient.query('ROLLBACK');
-    throw e;
   }
 
 }
