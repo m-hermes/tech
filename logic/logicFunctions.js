@@ -46,29 +46,12 @@ async function updateAdressTable(newAdress) {
 }
 
 function anonymizeIp(ip) {
-	if (ip.length < 4) {
-		return '???';
-	} else {
-
-		let sepPos = ip.lastIndexOf('.');
-		if (sepPos !== -1) {
-			// ip adress contains a dot
-			let newIp = ip.slice(0, sepPos) + '???';
-			return newIp;
-		}
-
-		sepPos = ip.lastIndexOf(':');
-		if (sepPos !== -1) {
-			// ip adress contains a colon
-			let newIp = ip.slice(0, sepPos) + '???';
-			return newIp;
-		}
-
-		// If no '.' or ':' then replace last 3 digits
-		let newIp = ip.slice(0, ip.length - 3) + '???';
+  if (ip.length < 4) {
+    return '???';
+  } else {
+		let newIp = ip.slice(0, ip.length-3) + '???';
 		return newIp;
-		}
-	}
+  }
 }
 
 module.exports = {
