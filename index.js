@@ -49,7 +49,9 @@ const functs = require('./logic/logicFunctions');
 
 // Routes
 app.get('/', (req, res) => {
-	res.render('index', {globalCounter : functs.getCounter()});
+  res.render('index', {
+    globalCounter: functs.getCounter()
+  });
 });
 
 // Sebsocket route
@@ -57,37 +59,44 @@ app.ws('/ws', async function(ws, req) {
 
   ws.on('message', async function(msg) {
 
-			// Dealing with globalCounter
-      if (msg === 'increaseGlobalCounter') {
-        await functs.increaseCounter()
-					// Sending new value to all clients
-          .then(currentValue => {
-            expressWs.getWss().clients.forEach(
-              (client) => {
-                client.send(JSON.stringify({
-                  'globalCounter': currentValue
-                }));
-              })
-          });
-      }
+    // Dealing with globalCounter
+    if (msg === 'increaseGlobalCounter') {
+      await functs.increaseCounter()
+        // Sending new value to all clients
+        .then(currentValue => {
+          expressWs.getWss().clients.forEach(
+            (client) => {
+              client.send(JSON.stringify({
+                'globalCounter': currentValue
+              }));
+            })
+        });
+    }
 
-			// Dealing with new client
-			// and its IP adress
-      if (msg === 'hello') {
-        // IP adress
-        let ipAdress = functs.anonymizeIp(req.socket.remoteAddress);
-				// Update database and getting new list
-        functs.updateAdressTable(ipAdress)
-					// Sending new list to all clients
-          .then(result =>
-            expressWs.getWss().clients.forEach(
-              (client) => {
-                client.send(JSON.stringify({
-                  ipAdresses: result.rows
-                }));
-              })
-          )
-      }
+    // Dealing with new client
+    // and its IP adress
+    if (msg === 'hello') {
+      // IP adress
+      let ipAdress = functs.anonymizeIp(req.socket.remoteAddress);
+
+      // IP test
+      try {
+        let ipTest = req.headers['x-forwarded-for'].split(',')[0].trim();
+				console.log(ipTest);
+      } catch {}
+
+      // Update database and getting new list
+      functs.updateAdressTable(ipAdress)
+        // Sending new list to all clients
+        .then(result =>
+          expressWs.getWss().clients.forEach(
+            (client) => {
+              client.send(JSON.stringify({
+                ipAdresses: result.rows
+              }));
+            })
+        )
+    }
 
   });
 
