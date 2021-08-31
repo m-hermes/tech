@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // client's ip adress.
   socket.addEventListener(
     'open',
-    () => socket.send('hello'),
+    () => {socket.send('hello'); console.log('WebSocket opened.');},
     false
   );
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('globalCounterButton')
     .addEventListener(
       'click',
-      () => socket.send('increaseGlobalCounter'),
+      () => {socket.send('increaseGlobalCounter'); console.log('Increase of Counter requested.');},
       false
     );
 

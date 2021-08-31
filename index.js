@@ -57,6 +57,8 @@ app.ws('/ws', async function(ws, req) {
 
   ws.on('message', async function(msg) {
 
+		console.log(msg);
+
 			// Dealing with globalCounter
       if (msg === 'increaseGlobalCounter') {
         await functs.increaseCounter()
