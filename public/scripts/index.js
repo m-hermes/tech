@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		//`${socketProtocol}//${window.location.hostname}/ws/`;
 
   let socket = new WebSocket(socketUrl);
-	console.log('Websocket url = ' + socketUrl);
 
 
   // Global counter and adressTable elements:

@@ -55,8 +55,6 @@ app.get('/', (req, res) => {
 // Sebsocket route
 app.ws('/ws', async function(ws, req) {
 
-	console.log(ws);
-
   ws.on('message', async function(msg) {
 
 			// Dealing with globalCounter
