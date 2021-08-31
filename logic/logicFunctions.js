@@ -49,16 +49,24 @@ function anonymizeIp(ip) {
 	if (ip.length < 4) {
 		return '???';
 	} else {
-		if (let dotPos = ip.lastIndexOf('.') !== -1)) {
+
+		let sepPos = ip.lastIndexOf('.');
+		if (sepPos !== -1)) {
 			// ip adress contains a dot
-			let newIp = ip.slice(0, dotPos) + '???';
+			let newIp = ip.slice(0, sepPos) + '???';
 			return newIp;
-		} else if (let colon = ip.lastIndexOf(':') !== -1) {
+		}
+
+		sepPos = ip.lastIndexOf(':');
+		if (sepPos !== -1) {
 			// ip adress contains a colon
-			newIp = ip.slice(0, dotPos) + '???';
-		} else {
-			// replace last 3 digits
-			let newIp = ip.slice(0, ip.length - 3) + '???';
+			let newIp = ip.slice(0, sepPos) + '???';
+			return newIp;
+		}
+
+		// If no '.' or ':' then replace last 3 digits
+		let newIp = ip.slice(0, ip.length - 3) + '???';
+		return newIp;
 		}
 	}
 }
