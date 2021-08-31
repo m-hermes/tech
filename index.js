@@ -80,7 +80,9 @@ app.ws('/ws', async function(ws, req) {
       // let ipAdress = functs.anonymizeIp(req.socket.remoteAddress);
 
       // IP adress (proxy)
-      let ipAdress = req.headers['x-forwarded-for'].split(',')[0].trim();
+      let ipAdress = functs.anonymizeIp(
+				req.headers['x-forwarded-for'].split(',')[0].trim()
+			);
 
       // Update database and getting new list
       functs.updateAdressTable(ipAdress)
