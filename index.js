@@ -76,14 +76,11 @@ app.ws('/ws', async function(ws, req) {
     // Dealing with new client
     // and its IP adress
     if (msg === 'hello') {
-      // IP adress
-      let ipAdress = functs.anonymizeIp(req.socket.remoteAddress);
+      // IP adress (no proxy)
+      // let ipAdress = functs.anonymizeIp(req.socket.remoteAddress);
 
-      // IP test
-      try {
-        let ipTest = req.headers['x-forwarded-for'].split(',')[0].trim();
-				console.log(ipTest);
-      } catch {}
+      // IP adress (proxy)
+      let ipAdress = req.headers['x-forwarded-for'].split(',')[0].trim();
 
       // Update database and getting new list
       functs.updateAdressTable(ipAdress)
