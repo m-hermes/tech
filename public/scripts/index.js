@@ -37,11 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //const port = process.env.PORT || 5000
 
-  const socketUrl = location.origin.replace(/^http/, 'ws');
+  const socketUrl = location.origin.replace(/^http/, 'ws') + '/ws/';
     //`${socketProtocol}//${window.location.hostname}:${port}/ws/`;
 		//`${socketProtocol}//${window.location.hostname}/ws/`;
 
-  let socket = new WebSocket(socketUrl+'/ws/');
+  let socket = new WebSocket(socketUrl);
+	console.log('Websocket url = ' + socketUrl);
 
 
   // Global counter and adressTable elements:
