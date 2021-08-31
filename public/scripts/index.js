@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup of websocket
   // required for global counter and ip adress list
   // basis found on https://fjolt.com/article/javascript-websockets
-  const socketProtocol = 'ws:'
-    // (window.location.protocol === 'https:' ? 'wss:' : 'ws:');
+  const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:');
 
-  const port = 5000;
+  // const port = 5000;
 
   const socketUrl =
-    `${socketProtocol}//${window.location.hostname}:${port}/ws/`;
+    //`${socketProtocol}//${window.location.hostname}:${port}/ws/`;
+		`${socketProtocol}//${window.location.hostname}/ws/`;
 
   let socket = new WebSocket(socketUrl);
 
