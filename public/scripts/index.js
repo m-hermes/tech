@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const port = process.env.PORT || 5000
 
   const socketUrl =
-    `${socketProtocol}//${window.location.hostname}:${port}/ws/`;
+    //`${socketProtocol}//${window.location.hostname}:${port}/ws/`;
+		`${socketProtocol}//${window.location.hostname}/ws/`;
 
   let socket = new WebSocket(socketUrl);
 
