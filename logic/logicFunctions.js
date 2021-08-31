@@ -51,7 +51,7 @@ function anonymizeIp(ip) {
 	} else {
 
 		let sepPos = ip.lastIndexOf('.');
-		if (sepPos !== -1)) {
+		if (sepPos !== -1) {
 			// ip adress contains a dot
 			let newIp = ip.slice(0, sepPos) + '???';
 			return newIp;
