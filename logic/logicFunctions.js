@@ -53,14 +53,14 @@ function anonymizeIp(ip) {
     let sepPos = ip.lastIndexOf('.');
     if (sepPos !== -1) {
       // ip adress contains a dot
-      let newIp = ip.slice(0, sepPos) + '???';
+      let newIp = ip.slice(0, sepPos + 1) + '???';
       return newIp;
     }
 
     sepPos = ip.lastIndexOf(':');
     if (sepPos !== -1) {
       // ip adress contains a colon
-      let newIp = ip.slice(0, sepPos) + '???';
+      let newIp = ip.slice(0, sepPos + 1) + '???';
       return newIp;
     }
 
