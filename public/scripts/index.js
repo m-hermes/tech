@@ -33,14 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup of websocket
   // required for global counter and ip adress list
   // basis found on https://fjolt.com/article/javascript-websockets
-  const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:');
-
-  //const port = process.env.PORT || 5000
-
   const socketUrl = location.origin.replace(/^http/, 'ws') + '/ws/';
-    //`${socketProtocol}//${window.location.hostname}:${port}/ws/`;
-		//`${socketProtocol}//${window.location.hostname}/ws/`;
-
   let socket = new WebSocket(socketUrl);
 
 
@@ -89,12 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     false
   )
 
-  // @isOpen
-  // check if a websocket is open
-  const isOpen = function(ws) {
-    return ws.readyState === ws.OPEN
-  }
-
   // Sending request for increase in global counter
   document.getElementById('globalCounterButton')
     .addEventListener(
@@ -103,13 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
       false
     );
 
-});
-
-
-document.addEventListener('visibilitychange', () => {
-	if (document.hidden){
-		console.log('Browser tab is hidden');
-	} else {
-		console.log('Browser tab is visible.');
+  // Webworker to keep the websocket connection from timing out.
+  const worker = new Worker('worker.js');
+	worker.onmessage = (e) => {
+		if (e.data === 'pingServer') {
+			socket.send('ping');
+		}
 	}
-})
+
+
+});
