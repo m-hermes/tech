@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // client's ip adress.
   socket.addEventListener(
     'open',
-    () => {socket.send('hello'); console.log('WebSocket opened.');},
+    () => socket.send('hello'),
     false
   );
 
@@ -99,8 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('globalCounterButton')
     .addEventListener(
       'click',
-      () => {socket.send('increaseGlobalCounter'); console.log('Increase of Counter requested.');},
+      () => socket.send('increaseGlobalCounter'),
       false
     );
 
 });
+
+
+document.addEventListener('visibilitychange', () => {
+	if (document.hidden){
+		console.log('Browser tab is hidden');
+	} else {
+		console.log('Browser tab is visible.');
+	}
+})
