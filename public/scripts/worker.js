@@ -1,3 +1,3 @@
 setInterval(() => {
 	postMessage('pingServer');
-},1000);
+},10000);

@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	worker.onmessage = (e) => {
 		if (e.data === 'pingServer') {
 			socket.send('ping');
-			console.log('ping');
 		}
 	}
 
