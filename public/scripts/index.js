@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
   // Webworker to keep the websocket connection from timing out.
-  const worker = new Worker('worker.js');
+  const worker = new Worker('scripts/worker.js');
 	worker.onmessage = (e) => {
 		if (e.data === 'pingServer') {
 			socket.send('ping');
